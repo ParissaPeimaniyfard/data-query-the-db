@@ -2,9 +2,9 @@
 import sqlite3
 
 conn = sqlite3.connect('data/ecommerce.sqlite')
-db = conn.cursor()
+dbb = conn.cursor()
 
-def query_orders(dbb):
+def query_orders(db):
     # return a list of orders displaying each column
     query = '''
     SELECT * FROM Orders
@@ -31,12 +31,14 @@ def get_waiting_time(db):
     # and calculate an extra TimeDelta column displaying the number of days
     # between OrderDate and ShippedDate, ordered by ascending TimeDelta
     query = '''
+    SELECT *, julianday(ShippedDate) - julianday(OrderDate) as timedelta
+    FROM Orders
+    order by timedelta
 
     '''
     db.execute(query)
     results = db.fetchall()
     return results
-
-
 #print(query_orders (db))
 #print(get_orders_range (db, 2012-4-28, 2012-9-13))
+#print(get_waiting_time (db))
